@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bright Sparks • Diwali Stall</title>
+  
+  <!-- Google Fonts: Royal Festive Serif & Warm Modern Body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Fredoka:wght@400;500;600;700&family=Yatra+One&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          screens: {
+            'xs': '380px',
+          },
+          colors: {
+            maroon: {
+              950: '#140306',
+              900: '#220609',
+              850: '#2e0a0f',
+              800: '#420f15',
+              700: '#5c171e',
+              600: '#7a1f29'
+            },
+            gold: {
+              100: '#FFF8D9',
+              200: '#FEEDAC',
+              300: '#FDDF78',
+              400: '#F5BD38',
+              500: '#D69E1E',
+              600: '#B57E0E'
+            },
+            clay: {
+              400: '#D65C2B',
+              500: '#BD4F22',
+              700: '#7E2F0F'
+            },
+            marigold: {
+              300: '#FED232',
+              400: '#FFA000',
+              500: '#FF6F00'
+            }
+          },
+          fontFamily: {
+            title: ['Cinzel', 'serif'],
+            festive: ['"Yatra One"', 'cursive', 'serif'],
+            body: ['Fredoka', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Default Diya Cursor Styling */
+    #diya-cursor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.04s ease-out;
+      will-change: transform, left, top;
+      display: none;
+    }
+
+    /* LAPTOP / DESKTOP (Width >= 768px): DIYA IS VISIBLE & ACTIVE */
+    @media screen and (min-width: 768px) {
+      #diya-cursor {
+        display: block !important;
+      }
+      body, button, a, input, select, [role="button"] {
+        cursor: none !important;
+      }
+    }
+
+    /* MOBILE / TOUCH (Width < 768px or touch pointer): DIYA IS COMPLETELY REMOVED */
+    @media screen and (max-width: 767px), (pointer: coarse), (hover: none) {
+      #diya-cursor {
+        display: none !important;
+        visibility: hidden !important;
+      }
+      body, button, a, input, select, [role="button"] {
+        cursor: auto !important;
+      }
+    }
+
+    /* Trailing golden Diwali sparkles (Desktop only) */
+    .spark-dot {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999998;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFBE0 25%, #F5BD38 70%, #FF6F00 100%);
+      animation: sparkFloat 0.75s forwards ease-out;
+    }
+    @keyframes sparkFloat {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.15); }
+    }
+
+    /* Split-curtain grand opening */
+    .curtain-left {
+      transform: translateX(0);
+      transition: transform 1.15s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .curtain-right {
+      transform: translateX(0);
+      transition: transform 1.15s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .curtain-open .curtain-left {
+      transform: translateX(-101%);
+    }
+    .curtain-open .curtain-right {
+      transform: translateX(101%);
+    }
+    .curtain-content-fade {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .curtain-open .curtain-content-fade {
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+
+    /* Ambient Diya glow pulse */
+    @keyframes diyaPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(245, 189, 56, 0.75)) drop-shadow(0 0 22px rgba(255, 111, 0, 0.5));
+        transform: scale(1);
+      }
+      50% {
+        filter: drop-shadow(0 0 16px rgba(255, 235, 59, 0.95)) drop-shadow(0 0 35px rgba(245, 158, 11, 0.75));
+        transform: scale(1.04);
+      }
+    }
+    .diya-glow {
+      animation: diyaPulse 2.8s ease-in-out infinite;
+    }
+
+    /* Hanging Kandeel sway */
+    @keyframes lanternSway {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3.5deg); }
+    }
+    .lantern-sway {
+      animation: lanternSway 4s ease-in-out infinite alternate;
+      transform-origin: top center;
+    }
+
+    /* Floating background lanterns */
+    @keyframes floatKandil {
+      0%, 100% { transform: translateY(0px) rotate(-1.5deg); }
+      50% { transform: translateY(-14px) rotate(2deg); }
+    }
+    .float-kandil {
+      animation: floatKandil 5s ease-in-out infinite alternate;
+    }
+
+    /* Fairy lights twinkling glow */
+    @keyframes fairyTwinkle {
+      0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 2px #F5BD38); }
+      50% { opacity: 1; filter: drop-shadow(0 0 12px #FFD700) drop-shadow(0 0 18px #FF6F00); }
+    }
+    .fairy-glow-1 { animation: fairyTwinkle 1.8s ease-in-out infinite alternate; }
+    .fairy-glow-2 { animation: fairyTwinkle 2.3s ease-in-out infinite alternate 0.6s; }
+
+    /* Shimmer Gold Gradient animation */
+    @keyframes goldShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .gold-shimmer {
+      background: linear-gradient(90deg, #F5BD38 0%, #FFF7D6 25%, #E5A630 50%, #FFF7D6 75%, #F5BD38 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      animation: goldShimmer 5s linear infinite;
+    }
+
+    /* Royal Indian Jaali Decorative Lattice Background Pattern */
+    .bg-festive-home {
+      background-color: #FAF4EB;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg width='56' height='56' viewBox='0 0 56 56' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D69E1E' fill-opacity='0.08' fill-rule='evenodd'%3E%3Cpath d='M28 0l28 28-28 28L0 28 28 0zm0 7.071L7.071 28 28 48.929 48.929 28 28 7.071zM28 14l14 14-14 14-14-14 14-14zm0 5.657L19.657 28 28 36.343 36.343 28 28 19.657z'/%3E%3Ccircle cx='28' cy='28' r='2.5'/%3E%3Ccircle cx='0' cy='0' r='2'/%3E%3Ccircle cx='56' cy='0' r='2'/%3E%3Ccircle cx='0' cy='56' r='2'/%3E%3Ccircle cx='56' cy='56' r='2'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .dark .bg-festive-home {
+      background-color: #140306;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg width='56' height='56' viewBox='0 0 56 56' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23F5BD38' fill-opacity='0.09' fill-rule='evenodd'%3E%3Cpath d='M28 0l28 28-28 28L0 28 28 0zm0 7.071L7.071 28 28 48.929 48.929 28 28 7.071zM28 14l14 14-14 14-14-14 14-14zm0 5.657L19.657 28 28 36.343 36.343 28 28 19.657z'/%3E%3Ccircle cx='28' cy='28' r='2.5'/%3E%3Ccircle cx='0' cy='0' r='2'/%3E%3Ccircle cx='56' cy='0' r='2'/%3E%3Ccircle cx='0' cy='56' r='2'/%3E%3Ccircle cx='56' cy='56' r='2'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Traditional Marigold Garland Motif Row */
+    .marigold-garland {
+      background: repeating-linear-gradient(
+        90deg,
+        #FFA000 0px,
+        #FFA000 14px,
+        #FF6F00 14px,
+        #FF6F00 28px,
+        #2E7D32 28px,
+        #2E7D32 32px
+      );
+      height: 7px;
+    }
+
+    /* Canvas Fireworks Overlay */
+    #fireworks-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99990;
+    }
+
+    /* Cart counter bounce */
+    @keyframes bump {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+    .bump-anim {
+      animation: bump 0.3s ease-out;
+    }
+
+    /* Range slider custom styling */
+    input[type=range] {
+      accent-color: #F5BD38;
+      touch-action: pan-y;
+    }
+
+    /* Equalizer animation */
+    @keyframes eqBar1 {
+      0%, 100% { height: 4px; }
+      50% { height: 12px; }
+    }
+    @keyframes eqBar2 {
+      0%, 100% { height: 11px; }
+      50% { height: 5px; }
+    }
+    @keyframes eqBar3 {
+      0%, 100% { height: 6px; }
+      50% { height: 14px; }
+    }
+    .eq-bar-1 { animation: eqBar1 0.6s ease-in-out infinite; }
+    .eq-bar-2 { animation: eqBar2 0.75s ease-in-out infinite; }
+    .eq-bar-3 { animation: eqBar3 0.5s ease-in-out infinite; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-festive-home text-stone-800 dark:text-stone-100 font-body antialiased min-h-screen transition-colors duration-300 relative overflow-x-hidden selection:bg-gold-400 selection:text-maroon-950">
+
+  <!-- ==================== BACKGROUND AUDIO ELEMENT ==================== -->
+  <audio id="bg-music" loop preload="auto" playsinline src="diwali_music.mp3"></audio>
+
+  <!-- ==================== FIREWORKS CANVAS OVERLAY ==================== -->
+  <canvas id="fireworks-canvas"></canvas>
+
+  <!-- ==================== AMBIENT DIWALI BACKGROUND ELEMENTS ==================== -->
+  <!-- Left Floating Akash Kandil -->
+  <div class="fixed top-20 left-2 sm:left-6 z-10 pointer-events-none hidden lg:block float-kandil opacity-85">
+    <div class="w-16 h-36 flex flex-col items-center">
+      <div class="w-0.5 h-10 bg-gradient-to-b from-gold-400/80 to-gold-400/20"></div>
+      <div class="w-12 h-14 bg-gradient-to-b from-clay-500 via-amber-500 to-maroon-800 rounded-md border-2 border-gold-400 shadow-xl flex items-center justify-center diya-glow">
+        <span class="text-xs font-bold text-gold-100 font-festive">शुभ</span>
+      </div>
+      <div class="flex gap-1 mt-1">
+        <div class="w-1 h-12 bg-gradient-to-b from-amber-400 to-clay-700 rounded-full"></div>
+        <div class="w-1 h-16 bg-gradient-to-b from-gold-300 to-clay-700 rounded-full"></div>
+        <div class="w-1 h-14 bg-gradient-to-b from-amber-400 to-clay-700 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Floating Akash Kandil -->
+  <div class="fixed top-24 right-2 sm:right-6 z-10 pointer-events-none hidden lg:block float-kandil opacity-85" style="animation-delay: -2.5s;">
+    <div class="w-16 h-36 flex flex-col items-center">
+      <div class="w-0.5 h-12 bg-gradient-to-b from-gold-400/80 to-gold-400/20"></div>
+      <div class="w-12 h-14 bg-gradient-to-b from-clay-500 via-amber-500 to-maroon-800 rounded-md border-2 border-gold-400 shadow-xl flex items-center justify-center diya-glow">
+        <span class="text-xs font-bold text-gold-100 font-festive">लाभ</span>
+      </div>
+      <div class="flex gap-1 mt-1">
+        <div class="w-1 h-14 bg-gradient-to-b from-amber-400 to-clay-700 rounded-full"></div>
+        <div class="w-1 h-16 bg-gradient-to-b from-gold-300 to-clay-700 rounded-full"></div>
+        <div class="w-1 h-12 bg-gradient-to-b from-amber-400 to-clay-700 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CUSTOM DIYA CURSOR (DESKTOP ONLY) ==================== -->
+  <div id="diya-cursor">
+    <svg width="68" height="68" viewBox="0 0 100 100" fill="none" class="overflow-visible filter drop-shadow-md">
+      <!-- Glow Aura -->
+      <g id="cursor-glow" class="opacity-0 transition-opacity duration-75">
+        <circle cx="50" cy="35" r="32" fill="url(#diyaHalo)" />
+      </g>
+      
+      <!-- Flame (Lights up on click and stays for EXACTLY 0.09 sec) -->
+      <g id="cursor-flame" class="opacity-0 transition-all duration-75 transform scale-75" style="transform-origin: 50px 48px;">
+        <path d="M50 14 C43 28, 38 38, 41 46 C44 51, 56 51, 59 46 C62 38, 57 28, 50 14 Z" fill="#E65100" />
+        <path d="M50 20 C45 30, 42 38, 44 44 C46 48, 54 48, 56 44 C58 38, 55 30, 50 20 Z" fill="#FFB300" />
+        <path d="M50 26 C47 33, 45 39, 46 43 C47 46, 54 43, 55 39, 53 33, 50 26 Z" fill="#FFF9C4" />
+      </g>
+
+      <!-- Wick in clay base -->
+      <path d="M50 42 L50 49" stroke="#3E2723" stroke-width="2.5" stroke-linecap="round" />
+
+      <!-- Symmetrical Traditional Earthen Diya -->
+      <path d="M16 48 C16 48, 34 56, 50 56 C66 56, 84 48, 84 48 C85 53, 81 60, 77 64 C68 76, 58 78, 50 78 C42 78, 32 76, 23 64 C19 60, 15 53, 16 48 Z" fill="#B34720" stroke="#2B1006" stroke-width="3" stroke-linejoin="round" />
+      <path d="M38 78 C38 84, 34 88, 31 90 C43 92, 57 92, 69 90 C66 88, 62 84, 62 78 Z" fill="#8C3312" stroke="#2B1006" stroke-width="2.8" stroke-linejoin="round" />
+      
+      <!-- Golden Oil Pool -->
+      <ellipse cx="50" cy="50" rx="31" ry="8.5" fill="#ECA928" stroke="#2B1006" stroke-width="2.6" />
+      <ellipse cx="50" cy="50.5" rx="23" ry="5.5" fill="#F8C94C" />
+
+      <!-- Tribal Etched Patterns -->
+      <path d="M22 55 Q 28 64 35 56 Q 42 66 50 58 Q 58 66 65 56 Q 72 64 78 55" fill="none" stroke="#682109" stroke-width="2.4" stroke-linecap="round" />
+      <circle cx="28" cy="62" r="2" fill="#ECA928" />
+      <circle cx="42" cy="65" r="2.2" fill="#ECA928" />
+      <circle cx="58" cy="65" r="2.2" fill="#ECA928" />
+      <circle cx="72" cy="62" r="2" fill="#ECA928" />
+
+      <defs>
+        <radialGradient id="diyaHalo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFEB3B" stop-opacity="0.95" />
+          <stop offset="45%" stop-color="#FF9800" stop-opacity="0.6" />
+          <stop offset="100%" stop-color="#E65100" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="action-toast" class="fixed top-14 sm:top-16 right-3 sm:right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none bg-gradient-to-r from-gold-400 via-amber-300 to-gold-400 text-maroon-950 font-bold px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl border-2 border-maroon-900 text-xs flex items-center gap-2 max-w-[90vw]">
+    <span id="toast-text">Notice</span>
+  </div>
+
+  <!-- ==================== CINEMATIC SPLIT-CURTAIN WELCOME SCREEN ==================== -->
+  <div id="intro-slide" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+    <!-- Left Velvet Curtain with Gold Brocade Foil Border -->
+    <div class="curtain-left absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-maroon-950 via-maroon-900 to-maroon-850 border-r-4 border-gold-400 shadow-2xl flex items-center justify-end overflow-hidden">
+      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#F5BE38_1.5px,transparent_1.5px)] [background-size:24px_24px]"></div>
+      <div class="h-full w-5 bg-gradient-to-r from-transparent via-gold-400/20 to-gold-500/40 mr-1"></div>
+    </div>
+
+    <!-- Right Velvet Curtain with Gold Brocade Foil Border -->
+    <div class="curtain-right absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-maroon-950 via-maroon-900 to-maroon-850 border-l-4 border-gold-400 shadow-2xl flex items-center justify-start overflow-hidden">
+      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#F5BE38_1.5px,transparent_1.5px)] [background-size:24px_24px]"></div>
+      <div class="h-full w-5 bg-gradient-to-l from-transparent via-gold-400/20 to-gold-500/40 ml-1"></div>
+    </div>
+
+    <!-- Swaying Corner Kandeels -->
+    <div class="curtain-content-fade absolute top-4 left-6 sm:left-14 lantern-sway hidden md:block z-20">
+      <div class="w-0.5 h-20 bg-gradient-to-b from-gold-300 to-gold-500 mx-auto"></div>
+      <div class="w-12 h-14 bg-gradient-to-b from-clay-500 via-amber-500 to-maroon-800 rounded-lg border-2 border-gold-400 shadow-2xl flex items-center justify-center text-xs text-gold-200 font-bold font-festive">शुभ</div>
+    </div>
+    <div class="curtain-content-fade absolute top-4 right-6 sm:right-14 lantern-sway hidden md:block z-20" style="animation-delay: -1.8s;">
+      <div class="w-0.5 h-20 bg-gradient-to-b from-gold-300 to-gold-500 mx-auto"></div>
+      <div class="w-12 h-14 bg-gradient-to-b from-clay-500 via-amber-500 to-maroon-800 rounded-lg border-2 border-gold-400 shadow-2xl flex items-center justify-center text-xs text-gold-200 font-bold font-festive">लाभ</div>
+    </div>
+
+    <!-- Central Welcome Box -->
+    <div class="curtain-content-fade relative z-20 max-w-lg w-[92%] sm:w-full text-center px-5 py-6 sm:px-8 sm:py-10 mx-auto rounded-3xl bg-gradient-to-b from-maroon-900/95 to-maroon-950/95 border-2 border-gold-400/80 shadow-[0_0_50px_rgba(245,189,56,0.35)] backdrop-blur-md max-h-[92vh] overflow-y-auto">
+      
+      <!-- Top Floral Arch Motif -->
+      <div class="flex justify-center items-center gap-2 mb-2 sm:mb-3">
+        <span class="w-8 h-0.5 bg-gradient-to-r from-transparent to-gold-400"></span>
+        <span class="text-gold-400 text-xs sm:text-sm">✦ 🪔 ✦</span>
+        <span class="w-8 h-0.5 bg-gradient-to-l from-transparent to-gold-400"></span>
+      </div>
+
+      <!-- Glowing Center Diya -->
+      <div class="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-5 flex items-center justify-center rounded-full bg-gradient-to-b from-gold-400/20 to-amber-500/10 border-2 border-gold-400/60 diya-glow">
+        <svg width="40" height="40" viewBox="0 0 100 100" class="sm:w-[50px] sm:h-[50px]">
+          <circle cx="50" cy="35" r="28" fill="#F5BE38" fill-opacity="0.35" />
+          <path d="M50 14 C44 26 40 37 43 45 C46 51 54 51 57 45 C60 37 56 26 50 14 Z" fill="#F59E0B" />
+          <path d="M18 50 C24 64 36 74 50 74 C64 74 76 64 82 50 Z" fill="#B85028" stroke="#F5BE38" stroke-width="3" />
+          <ellipse cx="50" cy="50" rx="28" ry="7" fill="#ECA928" />
+        </svg>
+      </div>
+
+      <h1 class="font-title text-2xl sm:text-4xl font-extrabold tracking-wider text-gold-300 drop-shadow mb-1.5 sm:mb-2 gold-shimmer" data-i18n="welcomeTitle">
+        Welcome to the Bright Sparks
+      </h1>
+      <p class="text-gold-200/90 font-festive text-sm sm:text-lg mb-4 sm:mb-6 tracking-wider">
+        Udyamdeep
+      </p>
+
+      <button id="enter-btn" class="inline-flex items-center justify-center gap-2 px-7 py-3 sm:px-9 sm:py-3.5 bg-gradient-to-r from-gold-500 via-gold-400 to-amber-400 text-maroon-950 font-bold rounded-full shadow-[0_0_25px_rgba(245,189,56,0.65)] hover:shadow-gold-400/90 hover:scale-105 active:scale-95 transition-all text-sm sm:text-base">
+        <span data-i18n="enterBtn">Enter Stall</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 dark:bg-maroon-900/95 backdrop-blur border-b-2 border-gold-500/40 px-2 sm:px-8 py-2 shadow-lg transition-colors">
+    <div class="max-w-6xl mx-auto flex flex-wrap sm:flex-nowrap items-center justify-between gap-1.5 sm:gap-4">
+      
+      <!-- BRAND & EVENT TAG -->
+      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <button onclick="showView('stall')" class="text-left flex items-center gap-1 group">
+          <span class="text-lg sm:text-2xl drop-shadow">🪔</span>
+          <span class="text-base sm:text-2xl font-title font-extrabold text-maroon-900 dark:text-gold-300 tracking-tight sm:tracking-wide group-hover:text-gold-500 transition">Bright Sparks</span>
+        </button>
+        <span class="text-[10px] sm:text-xs bg-gradient-to-r from-gold-500/20 to-amber-500/20 text-gold-700 dark:text-gold-300 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-gold-500/40 font-semibold tracking-wider uppercase font-festive">Udyamdeep</span>
+      </div>
+
+      <!-- CONTROLS CLUSTER -->
+      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+        
+        <!-- AUDIO BAR WIDGET (Anchor positioned right) -->
+        <div class="relative flex items-center bg-stone-100 dark:bg-maroon-850 rounded-full border border-stone-300 dark:border-gold-500/40 px-1.5 py-0.5 sm:px-2 sm:py-1 shadow-sm gap-0.5 sm:gap-1.5">
+          <button id="audio-bar-speaker" onclick="toggleMasterMuteOrPlay(event)" class="text-xs hover:scale-110 active:scale-95 transition flex items-center justify-center p-0.5" title="Master Mute / Unmute">
+            <span id="audio-bar-icon">🔊</span>
+          </button>
+
+          <div id="audio-eq-bars" class="hidden flex items-end gap-[1.5px] h-3 mr-0.5" title="Music Playing">
+            <span class="w-[2px] bg-gold-400 rounded-full eq-bar-1"></span>
+            <span class="w-[2px] bg-amber-400 rounded-full eq-bar-2"></span>
+            <span class="w-[2px] bg-gold-500 rounded-full eq-bar-3"></span>
+          </div>
+
+          <input type="range" id="top-volume-slider" min="0" max="1" step="0.05" value="0.52" oninput="syncMasterVolume(this.value)" class="w-10 xs:w-14 sm:w-20 h-1.5 bg-stone-200 dark:bg-maroon-950 rounded-full cursor-pointer accent-gold-400" title="Master Volume">
+
+          <button id="audio-menu-btn" onclick="toggleAudioDropdown(event)" class="text-gold-500 hover:text-gold-400 p-0.5 hover:scale-110 transition flex items-center justify-center" title="Adjust Individual Audio">
+            <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+
+          <!-- AUDIO DROPDOWN (Anchored on the RIGHT) -->
+          <div id="audio-dropdown" class="hidden absolute right-0 top-full mt-2 w-60 max-w-[calc(100vw-20px)] bg-white dark:bg-maroon-900 border-2 border-gold-400 rounded-2xl shadow-2xl p-3 z-50 text-stone-800 dark:text-stone-100 space-y-2.5 backdrop-blur-md">
+            <div class="flex items-center gap-2">
+              <button id="music-play-toggle" onclick="toggleMusicPlayback(event)" class="w-7 h-7 flex items-center justify-center rounded-xl bg-gold-400 text-maroon-950 font-bold text-xs shadow hover:brightness-110 active:scale-95 transition shrink-0">
+                🎵
+              </button>
+              <input type="range" id="music-vol-slider" min="0" max="1" step="0.05" value="0.52" oninput="updateMusicVolume(this.value)" class="w-full h-1.5 bg-stone-200 dark:bg-maroon-950 rounded-full cursor-pointer accent-gold-400">
+              <span id="music-vol-label" class="text-xs font-bold text-gold-600 dark:text-gold-300 w-7 text-right shrink-0">52%</span>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2 border-t border-stone-200 dark:border-gold-500/20">
+              <button id="sfx-mute-toggle" onclick="toggleSfxMute(event)" class="w-7 h-7 flex items-center justify-center rounded-xl bg-gold-400 text-maroon-950 font-bold text-xs shadow hover:brightness-110 active:scale-95 transition shrink-0">
+                🔔
+              </button>
+              <input type="range" id="sfx-vol-slider" min="0" max="1" step="0.05" value="0.85" oninput="updateSfxVolume(this.value)" class="w-full h-1.5 bg-stone-200 dark:bg-maroon-950 rounded-full cursor-pointer accent-gold-400">
+              <span id="sfx-vol-label" class="text-xs font-bold text-gold-600 dark:text-gold-300 w-7 text-right shrink-0">85%</span>
+            </div>
+
+            <div id="audio-status-pill" class="text-[10px] text-center text-stone-500 dark:text-gold-300/80 pt-1 border-t border-stone-200 dark:border-gold-500/20">
+              🎵 Click 🎵 to Play / Pause Music
+            </div>
+          </div>
+        </div>
+
+        <!-- Light / Dark Toggle (Fixed Symmetrical Sun Icon) -->
+        <button id="theme-toggle" class="p-1 sm:p-1.5 rounded-full border border-stone-300 dark:border-gold-500/50 text-stone-600 dark:text-gold-300 hover:bg-stone-100 dark:hover:bg-maroon-800 transition shadow-sm shrink-0 flex items-center justify-center" title="Toggle Light / Dark Mode">
+          <svg id="theme-moon" class="w-3.5 h-3.5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg id="theme-sun" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41"></path></svg>
+        </button>
+
+        <!-- Wallet Balance Pill -->
+        <div class="flex items-center gap-0.5 bg-gradient-to-r from-amber-500/10 to-gold-500/20 dark:bg-black/50 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-gold-500/40 text-[11px] sm:text-xs font-bold text-stone-800 dark:text-gold-300 shadow-inner shrink-0">
+          <span>🪙</span>
+          <span id="wallet-balance">₹1,000</span>
+        </div>
+
+        <!-- Cart Button -->
+        <button id="cart-btn" class="relative flex items-center justify-center p-1 sm:p-1.5 rounded-full bg-gradient-to-r from-gold-500 to-amber-400 text-maroon-950 font-bold hover:brightness-110 transition active:scale-95 shadow-md shrink-0">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          <span id="cart-counter" class="absolute -top-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-clay-500 text-white text-[8px] sm:text-[9px] font-bold flex items-center justify-center border border-white dark:border-maroon-900 shadow">0</span>
+        </button>
+
+        <!-- Compact Language Switcher: E / H / M -->
+        <div class="flex rounded-xl bg-stone-100 dark:bg-maroon-850 p-0.5 border border-stone-300 dark:border-gold-500/40 text-[10px] sm:text-xs font-bold shadow-sm shrink-0">
+          <button onclick="setLanguage('en')" id="lang-en" class="px-1.5 sm:px-2 py-0.5 rounded-lg bg-gold-400 text-maroon-950 transition">E</button>
+          <button onclick="setLanguage('hi')" id="lang-hi" class="px-1.5 sm:px-2 py-0.5 rounded-lg text-stone-600 dark:text-gold-300 hover:text-black dark:hover:text-white transition">H</button>
+          <button onclick="setLanguage('mr')" id="lang-mr" class="px-1.5 sm:px-2 py-0.5 rounded-lg text-stone-600 dark:text-gold-300 hover:text-black dark:hover:text-white transition">M</button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== FESTIVE MARIGOLD GARLAND TOP ACCENT ==================== -->
+  <div class="marigold-garland w-full shadow-sm"></div>
+
+  <!-- ==================== VIEW 1: MAIN STALL VIEW ==================== -->
+  <div id="view-stall" class="block">
+    <main class="max-w-6xl mx-auto px-2.5 sm:px-4 py-4 sm:py-8">
+      
+      <!-- Experience Simulation Notice -->
+      <div class="mb-3 sm:mb-5 text-center">
+        <span class="inline-flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-gold-500/10 via-amber-500/20 to-gold-500/10 text-stone-700 dark:text-gold-200 border border-gold-500/40 shadow-sm font-medium">
+          <span class="text-xs sm:text-sm">🪔</span>
+          <span data-i18n="simNote">Interactive Stall Experience • Virtual checkout demo for Udyamdeep</span>
+          <span class="text-xs sm:text-sm">🪔</span>
+        </span>
+      </div>
+
+      <!-- Festive Awning Canopy -->
+      <div class="relative rounded-t-3xl overflow-hidden shadow-2xl border-t-4 border-x-4 border-gold-500/60 bg-gradient-to-b from-maroon-950 via-maroon-900 to-clay-700 text-center py-5 sm:py-8 px-3 sm:px-4">
+        <div class="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(45deg,#F5BE38,#F5BE38_30px,#BD4F22_30px,#BD4F22_60px)]"></div>
+        <div class="absolute bottom-0 inset-x-0 h-2 bg-gradient-to-r from-gold-400 via-amber-300 to-gold-400"></div>
+
+        <div class="relative z-10 flex justify-center items-center gap-2 sm:gap-6 mb-2 sm:mb-3">
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-300 fairy-glow-1"></span>
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-orange-400 fairy-glow-2"></span>
+          <div class="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center diya-glow">
+            <svg width="22" height="22" viewBox="0 0 100 100" class="sm:w-7 sm:h-7"><ellipse cx="50" cy="55" rx="35" ry="12" fill="#B34720"/><path d="M50 25 C45 35 42 45 45 52 C48 57 52 57 55 52 C58 45 55 35 50 25 Z" fill="#F5BE38"/></svg>
+          </div>
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-orange-400 fairy-glow-2"></span>
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-300 fairy-glow-1"></span>
+        </div>
+
+        <h2 class="relative z-10 font-title text-xl sm:text-5xl font-extrabold text-gold-300 tracking-wider gold-shimmer">
+          Bright Sparks
+        </h2>
+        <p class="relative z-10 text-xs sm:text-base text-gold-200/90 mt-1 font-festive tracking-wide">
+          Udyamdeep
+        </p>
+      </div>
+
+      <!-- Stall Table Counter: 2 items side-by-side on phone, 2 items below it (2x2 grid on mobile) -->
+      <div class="relative bg-gradient-to-b from-[#5c1613] via-[#3d0e0d] to-[#1f0506] border-4 border-t-0 border-gold-500/60 rounded-b-3xl p-3 sm:p-10 shadow-2xl">
+        
+        <div class="absolute bottom-3 left-3 w-10 h-10 sm:w-20 sm:h-20 opacity-30 pointer-events-none">
+          <svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="42" stroke="#F5BE38" stroke-dasharray="4 4" stroke-width="2.5"/><circle cx="50" cy="50" r="22" fill="#BD4F22"/><circle cx="50" cy="50" r="10" fill="#FFA000"/></svg>
+        </div>
+        <div class="absolute bottom-3 right-3 w-10 h-10 sm:w-20 sm:h-20 opacity-30 pointer-events-none">
+          <svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="42" stroke="#F5BE38" stroke-dasharray="4 4" stroke-width="2.5"/><circle cx="50" cy="50" r="22" fill="#BD4F22"/><circle cx="50" cy="50" r="10" fill="#FFA000"/></svg>
+        </div>
+
+        <!-- 2-COL ON PHONE, 4-COL ON DESKTOP -->
+        <div class="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
+
+          <!-- ITEM 1: Garappa -->
+          <div class="bg-white/95 dark:bg-maroon-900/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-xl border-2 border-gold-400/40 hover:border-gold-400 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 group backdrop-blur-sm relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-6 h-6 bg-gradient-to-bl from-gold-400/50 to-transparent pointer-events-none"></div>
+
+            <div onclick="showView('garappa')" role="button" class="cursor-pointer">
+              <div class="h-28 sm:h-44 w-full bg-gradient-to-b from-[#FFFDF7] to-[#FFF3DC] dark:from-maroon-950 dark:to-maroon-900 rounded-lg sm:rounded-xl flex items-center justify-center p-1.5 sm:p-3 border border-gold-400/30 group-hover:scale-105 transition-transform duration-300 shadow-inner">
+                <svg width="90" height="90" viewBox="0 0 160 160" class="sm:w-[140px] sm:h-[140px]">
+                  <circle cx="80" cy="80" r="70" fill="#E5A630" stroke="#8A5A0A" stroke-width="3.5"/>
+                  <circle cx="80" cy="80" r="63" fill="#FDF3CF"/>
+                  <g transform="translate(42, 35) rotate(-12)">
+                    <circle cx="35" cy="35" r="30" fill="#E28E2B" stroke="#A9570B" stroke-width="2.8"/>
+                    <circle cx="35" cy="35" r="10" fill="#FDF3CF" stroke="#A9570B" stroke-width="2"/>
+                    <circle cx="25" cy="25" r="1.8" fill="#3E2005"/><circle cx="45" cy="24" r="1.5" fill="#3E2005"/><circle cx="48" cy="42" r="1.8" fill="#3E2005"/><circle cx="23" cy="44" r="1.5" fill="#3E2005"/><circle cx="35" cy="50" r="1.5" fill="#FFF"/>
+                  </g>
+                  <g transform="translate(68, 55) rotate(18)">
+                    <circle cx="32" cy="32" r="28" fill="#EDA23B" stroke="#9C4C04" stroke-width="2.8"/>
+                    <circle cx="32" cy="32" r="9" fill="#FDF3CF" stroke="#9C4C04" stroke-width="2"/>
+                    <circle cx="22" cy="22" r="1.6" fill="#3E2005"/><circle cx="42" cy="23" r="1.6" fill="#3E2005"/><circle cx="40" cy="40" r="1.6" fill="#FFF"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="mt-2">
+                <span class="text-[9px] sm:text-[11px] font-bold tracking-wider uppercase text-emerald-800 bg-emerald-100 dark:bg-emerald-950/80 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800" data-i18n="tagFood">Food</span>
+                <h3 class="font-title font-bold text-sm sm:text-xl text-maroon-900 dark:text-gold-300 mt-1 truncate" data-i18n="garappaTitle">Garappa</h3>
+                <p class="text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5" data-i18n="clickDetails">Recipe & story →</p>
+              </div>
+            </div>
+            <div class="mt-2.5 sm:mt-4 flex items-center justify-between pt-2 border-t border-stone-200 dark:border-gold-500/20">
+              <span class="text-base sm:text-2xl font-black text-maroon-900 dark:text-gold-200">₹60</span>
+              <button onclick="addToCart('garappa')" class="px-2.5 sm:px-4 py-1 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-gold-500 to-amber-400 hover:brightness-110 text-maroon-950 font-bold text-xs sm:text-sm shadow active:scale-95 transition" data-i18n="addBtn">+ Add</button>
+            </div>
+          </div>
+
+          <!-- ITEM 2: Toran -->
+          <div class="bg-white/95 dark:bg-maroon-900/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-xl border-2 border-gold-400/40 hover:border-gold-400 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 group backdrop-blur-sm relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-6 h-6 bg-gradient-to-bl from-gold-400/50 to-transparent pointer-events-none"></div>
+
+            <div onclick="showView('toran')" role="button" class="cursor-pointer">
+              <div class="h-28 sm:h-44 w-full bg-gradient-to-b from-[#FFFDF7] to-[#FFF3DC] dark:from-maroon-950 dark:to-maroon-900 rounded-lg sm:rounded-xl flex items-center justify-center p-1.5 sm:p-3 border border-gold-400/30 group-hover:scale-105 transition-transform duration-300 shadow-inner">
+                <svg width="90" height="90" viewBox="0 0 160 160" class="sm:w-[140px] sm:h-[140px]">
+                  <path d="M10 40 Q 80 55 150 40" fill="none" stroke="#B87B0F" stroke-width="4"/>
+                  <path d="M30 46 C24 65, 34 85, 30 100 C36 85, 46 65, 40 47 Z" fill="#2E7D32" stroke="#1B5E20" stroke-width="1.8"/>
+                  <path d="M75 50 C69 70, 79 92, 75 108 C81 92, 91 70, 85 51 Z" fill="#2E7D32" stroke="#1B5E20" stroke-width="1.8"/>
+                  <path d="M120 46 C114 65, 124 85, 120 100 C126 85, 136 65, 130 47 Z" fill="#2E7D32" stroke="#1B5E20" stroke-width="1.8"/>
+                  <circle cx="35" cy="46" r="14" fill="#F59E0B"/>
+                  <circle cx="58" cy="51" r="12" fill="#E65100"/>
+                  <circle cx="80" cy="53" r="14" fill="#F59E0B"/>
+                  <circle cx="102" cy="51" r="12" fill="#E65100"/>
+                  <circle cx="125" cy="46" r="14" fill="#F59E0B"/>
+                  <line x1="58" y1="63" x2="58" y2="82" stroke="#F5BE38" stroke-width="2"/>
+                  <circle cx="58" cy="84" r="4" fill="#F5BE38"/>
+                  <line x1="102" y1="63" x2="102" y2="82" stroke="#F5BE38" stroke-width="2"/>
+                  <circle cx="102" cy="84" r="4" fill="#F5BE38"/>
+                </svg>
+              </div>
+              <div class="mt-2">
+                <span class="text-[9px] sm:text-[11px] font-bold tracking-wider uppercase text-amber-800 bg-amber-100 dark:bg-amber-950/80 dark:text-amber-300 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-800" data-i18n="tagDecor">Decor</span>
+                <h3 class="font-title font-bold text-sm sm:text-xl text-maroon-900 dark:text-gold-300 mt-1 truncate" data-i18n="toranTitle">Toran</h3>
+                <p class="text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5" data-i18n="clickDetailsDecor">Craft details →</p>
+              </div>
+            </div>
+            <div class="mt-2.5 sm:mt-4 flex items-center justify-between pt-2 border-t border-stone-200 dark:border-gold-500/20">
+              <span class="text-base sm:text-2xl font-black text-maroon-900 dark:text-gold-200">₹120</span>
+              <button onclick="addToCart('toran')" class="px-2.5 sm:px-4 py-1 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-gold-500 to-amber-400 hover:brightness-110 text-maroon-950 font-bold text-xs sm:text-sm shadow active:scale-95 transition" data-i18n="addBtn">+ Add</button>
+            </div>
+          </div>
+
+          <!-- ITEM 3: Coming Soon 1 -->
+          <div class="bg-white/80 dark:bg-maroon-900/60 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow border-2 border-dashed border-gold-500/40 flex flex-col justify-between text-center backdrop-blur-sm">
+            <div class="h-28 sm:h-44 w-full bg-stone-50/70 dark:bg-maroon-950/50 rounded-lg sm:rounded-xl flex flex-col items-center justify-center p-2 text-stone-400">
+              <span class="text-2xl sm:text-3xl mb-1">🪔</span>
+              <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400 font-festive" data-i18n="comingSoon">Coming Soon</span>
+            </div>
+            <div class="mt-2 sm:mt-4 pt-1.5 sm:pt-3 border-t border-stone-200 dark:border-maroon-800 text-stone-400 text-[10px] sm:text-xs italic truncate">
+              Item 3 in prep
+            </div>
+          </div>
+
+          <!-- ITEM 4: Coming Soon 2 -->
+          <div class="bg-white/80 dark:bg-maroon-900/60 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow border-2 border-dashed border-gold-500/40 flex flex-col justify-between text-center backdrop-blur-sm">
+            <div class="h-28 sm:h-44 w-full bg-stone-50/70 dark:bg-maroon-950/50 rounded-lg sm:rounded-xl flex flex-col items-center justify-center p-2 text-stone-400">
+              <span class="text-2xl sm:text-3xl mb-1">✨</span>
+              <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400 font-festive" data-i18n="comingSoon">Coming Soon</span>
+            </div>
+            <div class="mt-2 sm:mt-4 pt-1.5 sm:pt-3 border-t border-stone-200 dark:border-maroon-800 text-stone-400 text-[10px] sm:text-xs italic truncate">
+              Item 4 in prep
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== ABOUT US SECTION ==================== -->
+    <footer class="mt-12 sm:mt-16 bg-gradient-to-b from-stone-100 to-amber-50/60 dark:from-maroon-900 dark:to-maroon-950 border-t-4 border-gold-500/60 pt-10 sm:pt-12 pb-12 sm:pb-14 px-3.5 sm:px-8 transition-colors relative">
+      <div class="marigold-garland absolute top-0 inset-x-0"></div>
+
+      <div class="max-w-4xl mx-auto pt-2">
+        
+        <div class="text-center mb-6 sm:mb-8">
+          <div class="flex items-center justify-center gap-2 mb-1">
+            <span class="text-gold-400 text-xs">✦ ✦ ✦</span>
+          </div>
+          <h2 class="font-title text-2xl sm:text-4xl font-extrabold text-maroon-900 dark:text-gold-300">
+            Bright Sparks
+          </h2>
+          <div class="w-20 h-1 bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mt-2 mb-3 sm:mb-4"></div>
+          
+          <p class="text-stone-700 dark:text-gold-100/90 max-w-2xl mx-auto text-xs sm:text-base leading-relaxed px-2" data-i18n="aboutHeartwarming">
+            We are students here to celebrate Diwali by sharing handmade decorations and authentic homemade Garappa with all of you. Welcome to our virtual stall! Step in and experience what it's like to be at our store—we are truly happy to meet you!
+          </p>
+        </div>
+
+        <!-- 5 Team Members -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 text-center mb-6 sm:mb-8">
+          <div onclick="openMemberModal('kinchal')" role="button" class="bg-white dark:bg-maroon-850/90 p-3 sm:p-4 rounded-2xl border-2 border-stone-200 dark:border-gold-400/30 shadow-md hover:border-gold-400 hover:-translate-y-1 transition duration-200 cursor-pointer active:scale-95">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 mx-auto rounded-full bg-gold-400/20 text-gold-500 font-bold flex items-center justify-center text-xs sm:text-sm mb-1.5 border border-gold-400/40">K</div>
+            <p class="font-bold text-maroon-900 dark:text-gold-300 text-xs sm:text-sm">Kinchal</p>
+            <p class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-300 mt-0.5">11th A</p>
+            <span class="text-[9px] sm:text-[10px] text-gold-600 dark:text-gold-400 mt-1 inline-block font-bold uppercase tracking-wider" data-i18n="viewBio">View Role</span>
+          </div>
+
+          <div onclick="openMemberModal('vaishnavi')" role="button" class="bg-white dark:bg-maroon-850/90 p-3 sm:p-4 rounded-2xl border-2 border-stone-200 dark:border-gold-400/30 shadow-md hover:border-gold-400 hover:-translate-y-1 transition duration-200 cursor-pointer active:scale-95">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 mx-auto rounded-full bg-gold-400/20 text-gold-500 font-bold flex items-center justify-center text-xs sm:text-sm mb-1.5 border border-gold-400/40">V</div>
+            <p class="font-bold text-maroon-900 dark:text-gold-300 text-xs sm:text-sm">Vaishnavi</p>
+            <p class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-300 mt-0.5">11th A</p>
+            <span class="text-[9px] sm:text-[10px] text-gold-600 dark:text-gold-400 mt-1 inline-block font-bold uppercase tracking-wider" data-i18n="viewBio">View Role</span>
+          </div>
+
+          <div onclick="openMemberModal('darshana')" role="button" class="bg-white dark:bg-maroon-850/90 p-3 sm:p-4 rounded-2xl border-2 border-stone-200 dark:border-gold-400/30 shadow-md hover:border-gold-400 hover:-translate-y-1 transition duration-200 cursor-pointer active:scale-95">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 mx-auto rounded-full bg-gold-400/20 text-gold-500 font-bold flex items-center justify-center text-xs sm:text-sm mb-1.5 border border-gold-400/40">D</div>
+            <p class="font-bold text-maroon-900 dark:text-gold-300 text-xs sm:text-sm">Darshana</p>
+            <p class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-300 mt-0.5">11th B</p>
+            <span class="text-[9px] sm:text-[10px] text-gold-600 dark:text-gold-400 mt-1 inline-block font-bold uppercase tracking-wider" data-i18n="viewBio">View Role</span>
+          </div>
+
+          <div onclick="openMemberModal('kartiki')" role="button" class="bg-white dark:bg-maroon-850/90 p-3 sm:p-4 rounded-2xl border-2 border-stone-200 dark:border-gold-400/30 shadow-md hover:border-gold-400 hover:-translate-y-1 transition duration-200 cursor-pointer active:scale-95">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 mx-auto rounded-full bg-gold-400/20 text-gold-500 font-bold flex items-center justify-center text-xs sm:text-sm mb-1.5 border border-gold-400/40">K</div>
+            <p class="font-bold text-maroon-900 dark:text-gold-300 text-xs sm:text-sm">Kartiki</p>
+            <p class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-300 mt-0.5">11th A</p>
+            <span class="text-[9px] sm:text-[10px] text-gold-600 dark:text-gold-400 mt-1 inline-block font-bold uppercase tracking-wider" data-i18n="viewBio">View Role</span>
+          </div>
+
+          <div onclick="openMemberModal('ayushi')" role="button" class="bg-white dark:bg-maroon-850/90 p-3 sm:p-4 rounded-2xl border-2 border-stone-200 dark:border-gold-400/30 shadow-md hover:border-gold-400 hover:-translate-y-1 transition duration-200 cursor-pointer active:scale-95 col-span-2 sm:col-span-1 max-w-[240px] sm:max-w-none mx-auto w-full">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 mx-auto rounded-full bg-gold-400/20 text-gold-500 font-bold flex items-center justify-center text-xs sm:text-sm mb-1.5 border border-gold-400/40">A</div>
+            <p class="font-bold text-maroon-900 dark:text-gold-300 text-xs sm:text-sm">Ayushi</p>
+            <p class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-300 mt-0.5">11th A</p>
+            <span class="text-[9px] sm:text-[10px] text-gold-600 dark:text-gold-400 mt-1 inline-block font-bold uppercase tracking-wider" data-i18n="viewBio">View Role</span>
+          </div>
+        </div>
+
+        <!-- SPECIAL SHOUTOUT NOTE: Tanya -->
+        <div class="my-5 sm:my-6 p-3.5 sm:p-4 rounded-2xl bg-white/90 dark:bg-maroon-950/80 border-2 border-gold-400/30 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 text-center sm:text-left shadow-md">
+          <div>
+            <p class="text-xs font-bold text-maroon-900 dark:text-gold-300 flex items-center justify-center sm:justify-start gap-1">
+              <span>✨</span>
+              <span>Special shoutout to Tanya (Kinchal's sister)</span>
+            </p>
+            <p class="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+              For filming edits, reels, and stall promotions!
+            </p>
+          </div>
+          <a href="https://www.instagram.com/tanyarchivess" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gold-500/40 text-stone-700 dark:text-gold-300 hover:text-black dark:hover:text-white hover:bg-gold-400/10 text-xs font-semibold transition shrink-0 active:scale-95">
+            <span>@tanyarchivess</span>
+            <svg class="w-3 h-3 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+        </div>
+
+        <!-- Campus Location & Acknowledgement -->
+        <div class="text-center pt-5 sm:pt-6 border-t border-stone-300 dark:border-maroon-800 text-xs text-stone-600 dark:text-gold-200/70 space-y-1.5 sm:space-y-2">
+          <p class="font-bold">Hirachand Nemchand College, Solapur</p>
+          <p class="text-[11px] text-gold-600 dark:text-gold-400/90 font-medium px-2">
+            ✨ Special thanks to Gemini AI for making the website and helping us bring Bright Sparks to life!
+          </p>
+        </div>
+
+      </div>
+    </footer>
+  </div>
+
+  <!-- ==================== VIEW 2: DEDICATED FULL PAGE FOR GARAPPA ==================== -->
+  <div id="view-garappa" class="hidden">
+    <div class="max-w-4xl mx-auto px-3.5 sm:px-4 py-5 sm:py-8">
+      <button onclick="showView('stall')" class="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl bg-stone-200 dark:bg-maroon-850 hover:bg-gold-400 text-stone-800 dark:text-gold-300 hover:text-maroon-950 font-bold text-xs sm:text-sm transition mb-4 sm:mb-6 shadow-md border border-gold-500/30 active:scale-95">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span data-i18n="backBtn">Back to Stall</span>
+      </button>
+
+      <div class="bg-white/95 dark:bg-maroon-900/95 rounded-2xl sm:rounded-3xl p-5 sm:p-10 border-2 border-gold-500 shadow-2xl space-y-6 sm:space-y-8 backdrop-blur-md relative overflow-hidden">
+        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-gold-400 via-amber-500 to-clay-500"></div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-200 dark:border-gold-500/20 pb-5 sm:pb-6">
+          <div>
+            <span class="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-emerald-800 bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 px-3 py-1 rounded-full border border-emerald-300 dark:border-emerald-800" data-i18n="tagFood">Food</span>
+            <h1 class="font-title text-2xl sm:text-5xl font-extrabold text-maroon-900 dark:text-gold-300 mt-2" data-i18n="garappaTitle">
+              Garappa
+            </h1>
+            <p class="text-stone-500 dark:text-stone-400 text-xs sm:text-sm mt-1" data-i18n="garappaSub">Authentic Traditional Homemade Snack</p>
+          </div>
+          <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0">
+            <span class="text-3xl sm:text-4xl font-black text-maroon-900 dark:text-gold-200">₹60</span>
+            <button onclick="addToCart('garappa')" class="px-5 sm:px-6 py-2 sm:py-2.5 rounded-2xl bg-gradient-to-r from-gold-500 to-amber-400 hover:brightness-110 text-maroon-950 font-bold shadow-lg text-sm sm:text-base active:scale-95 transition" data-i18n="addBtn">
+              + Add to Bag
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-title text-lg sm:text-xl font-bold text-maroon-900 dark:text-gold-300 mb-3 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gold-500"></span>
+            <span data-i18n="ingredientsTitle">Ingredients</span>
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs sm:text-sm" id="garappa-ingredients-list"></div>
+        </div>
+
+        <div>
+          <h3 class="font-title text-lg sm:text-xl font-bold text-maroon-900 dark:text-gold-300 mb-3 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-clay-500"></span>
+            <span data-i18n="recipeStepsTitle">Step-by-Step Recipe</span>
+          </h3>
+          <div class="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed bg-stone-50/80 dark:bg-maroon-950/80 p-4 sm:p-6 rounded-2xl border border-stone-200 dark:border-gold-500/20 shadow-inner" id="garappa-steps-list"></div>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-50 to-gold-50 dark:from-maroon-850 dark:to-maroon-800 border-2 border-amber-300 dark:border-gold-500/40 shadow-sm">
+          <h4 class="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-amber-900 dark:text-gold-300 mb-1" data-i18n="garappaMakerTitle">Maker & Availability:</h4>
+          <p class="text-xs sm:text-sm text-amber-950 dark:text-stone-200 leading-relaxed" data-i18n="garappaMakerInfo">
+            Prepared fresh using Kinchal's mom's authentic traditional recipe. This snack is made exclusively for our Bright Sparks stall and cannot be purchased anywhere outside!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VIEW 3: DEDICATED FULL PAGE FOR TORAN ==================== -->
+  <div id="view-toran" class="hidden">
+    <div class="max-w-4xl mx-auto px-3.5 sm:px-4 py-5 sm:py-8">
+      <button onclick="showView('stall')" class="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl bg-stone-200 dark:bg-maroon-850 hover:bg-gold-400 text-stone-800 dark:text-gold-300 hover:text-maroon-950 font-bold text-xs sm:text-sm transition mb-4 sm:mb-6 shadow-md border border-gold-500/30 active:scale-95">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span data-i18n="backBtn">Back to Stall</span>
+      </button>
+
+      <div class="bg-white/95 dark:bg-maroon-900/95 rounded-2xl sm:rounded-3xl p-5 sm:p-10 border-2 border-gold-500 shadow-2xl space-y-6 sm:space-y-8 backdrop-blur-md relative overflow-hidden">
+        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-gold-400 via-amber-500 to-clay-500"></div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-200 dark:border-gold-500/20 pb-5 sm:pb-6">
+          <div>
+            <span class="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-amber-800 bg-amber-100 dark:bg-amber-950 dark:text-amber-300 px-3 py-1 rounded-full border border-amber-300 dark:border-amber-800" data-i18n="tagDecor">Decor</span>
+            <h1 class="font-title text-2xl sm:text-5xl font-extrabold text-maroon-900 dark:text-gold-300 mt-2" data-i18n="toranTitle">
+              Toran
+            </h1>
+            <p class="text-stone-500 dark:text-stone-400 text-xs sm:text-sm mt-1" data-i18n="toranSub">Festive Handmade Doorway Hanging & Gifting Decor</p>
+          </div>
+          <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0">
+            <span class="text-3xl sm:text-4xl font-black text-maroon-900 dark:text-gold-200">₹120</span>
+            <button onclick="addToCart('toran')" class="px-5 sm:px-6 py-2 sm:py-2.5 rounded-2xl bg-gradient-to-r from-gold-500 to-amber-400 hover:brightness-110 text-maroon-950 font-bold shadow-lg text-sm sm:text-base active:scale-95 transition" data-i18n="addBtn">
+              + Add to Bag
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-title text-lg sm:text-xl font-bold text-maroon-900 dark:text-gold-300 mb-2 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gold-500"></span>
+            <span data-i18n="toranUsageTitle">Festive Decoration & Gifting</span>
+          </h3>
+          <p class="text-stone-700 dark:text-stone-300 text-xs sm:text-base leading-relaxed bg-stone-50/80 dark:bg-maroon-950/80 p-4 sm:p-6 rounded-2xl border border-stone-200 dark:border-gold-500/20 shadow-inner" data-i18n="toranDesc">
+            You can use this beautiful toran to decorate your doorway for Diwali and welcome guests, or gift it to friends and family. It brings warmth, tradition, and festive elegance to every home.
+          </p>
+        </div>
+
+        <div class="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-50 to-gold-50 dark:from-maroon-850 dark:to-maroon-800 border-2 border-amber-300 dark:border-gold-500/40 space-y-4 shadow-sm">
+          <div>
+            <h4 class="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-amber-900 dark:text-gold-300 mb-1" data-i18n="toranMakerTitle">Crafted with Love:</h4>
+            <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-200 leading-relaxed" data-i18n="toranMakerInfo">
+              Handcrafted with love by Kinchal's mom and local artisans.
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-amber-200 dark:border-stone-700">
+            <p class="font-bold text-[11px] sm:text-xs uppercase tracking-wider text-amber-900 dark:text-gold-300 mb-1" data-i18n="customOrdersTitle">Custom Orders & Tailoring:</p>
+            <p class="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed mb-3" data-i18n="customOrdersInfo">
+              If you would like custom-made torans or tailoring services (like blouses and festival wear), contact directly:
+            </p>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-maroon-900 p-3.5 sm:p-4 rounded-2xl border border-stone-200 dark:border-gold-500/30 shadow-sm">
+              <span class="text-xs sm:text-sm font-bold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
+                <span>📍</span>
+                <span>Ashok Chowk, Solapur</span>
+              </span>
+              
+              <div class="inline-flex items-center justify-between sm:justify-start gap-2 bg-stone-100 dark:bg-maroon-850 px-3 py-1.5 rounded-xl border border-stone-300 dark:border-gold-500/40 shadow-inner">
+                <span class="text-xs sm:text-sm font-bold text-maroon-900 dark:text-gold-300 tracking-wider">7755923902</span>
+                <button onclick="copyPhoneNumber('7755923902')" class="p-1.5 rounded-lg bg-gold-400 hover:bg-gold-300 text-maroon-950 active:scale-95 transition flex items-center justify-center shrink-0" title="Copy Phone Number">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TEAM MEMBER MODAL ==================== -->
+  <div id="member-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3.5 sm:p-4">
+    <div class="bg-white dark:bg-maroon-900 text-stone-800 dark:text-stone-100 rounded-3xl max-w-md w-full p-5 sm:p-7 relative border-2 border-gold-500 shadow-2xl">
+      <button onclick="closeMemberModal()" class="absolute top-3.5 right-4 text-stone-400 hover:text-maroon-900 dark:hover:text-gold-300 font-bold text-2xl p-1 leading-none">&times;</button>
+      <div id="member-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ==================== CART DRAWER ==================== -->
+  <div id="cart-drawer" class="fixed inset-y-0 right-0 z-50 w-full sm:max-w-md bg-white dark:bg-maroon-950 text-stone-800 dark:text-stone-100 shadow-2xl border-l-4 border-gold-500 translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-4 sm:p-5 bg-gradient-to-r from-stone-100 to-amber-50 dark:from-maroon-900 dark:to-maroon-850 border-b border-stone-200 dark:border-gold-500/40 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-5 h-5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <h3 class="font-title text-base sm:text-lg font-bold text-maroon-900 dark:text-gold-300" data-i18n="yourCart">Stall Bag</h3>
+      </div>
+      <button onclick="toggleCart()" class="text-stone-400 hover:text-black dark:hover:text-white text-2xl font-bold p-1">&times;</button>
+    </div>
+
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3"></div>
+
+    <div class="p-4 sm:p-5 bg-stone-50 dark:bg-maroon-900/60 border-t border-stone-200 dark:border-gold-500/30 space-y-3.5 sm:space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-stone-600 dark:text-gold-200 uppercase tracking-wider mb-2" data-i18n="selectBag">Select Packaging</label>
+        <div class="grid grid-cols-3 gap-2 text-xs font-medium">
+          <label class="flex flex-col items-center p-2 rounded-xl border border-stone-300 dark:border-maroon-700 bg-white dark:bg-maroon-800 cursor-pointer has-[:checked]:border-gold-500 has-[:checked]:bg-gold-50 dark:has-[:checked]:bg-maroon-700 shadow-sm active:scale-95 transition">
+            <input type="radio" name="packaging" value="5" onchange="updateCartTotal()" checked class="sr-only">
+            <span>Plastic</span>
+            <span class="font-bold text-maroon-900 dark:text-gold-300 mt-1">₹5</span>
+          </label>
+          <label class="flex flex-col items-center p-2 rounded-xl border border-stone-300 dark:border-maroon-700 bg-white dark:bg-maroon-800 cursor-pointer has-[:checked]:border-gold-500 has-[:checked]:bg-gold-50 dark:has-[:checked]:bg-maroon-700 shadow-sm active:scale-95 transition">
+            <input type="radio" name="packaging" value="10" onchange="updateCartTotal()" class="sr-only">
+            <span>Paper</span>
+            <span class="font-bold text-maroon-900 dark:text-gold-300 mt-1">₹10</span>
+          </label>
+          <label class="flex flex-col items-center p-2 rounded-xl border border-stone-300 dark:border-maroon-700 bg-white dark:bg-maroon-800 cursor-pointer has-[:checked]:border-gold-500 has-[:checked]:bg-gold-50 dark:has-[:checked]:bg-maroon-700 shadow-sm active:scale-95 transition">
+            <input type="radio" name="packaging" value="20" onchange="updateCartTotal()" class="sr-only">
+            <span>Cotton</span>
+            <span class="font-bold text-maroon-900 dark:text-gold-300 mt-1">₹20</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-base font-bold text-maroon-900 dark:text-gold-300 pt-2 border-t border-stone-200 dark:border-stone-800">
+        <span data-i18n="totalLabel">Total:</span>
+        <span id="cart-grand-total" class="text-xl">₹0</span>
+      </div>
+
+      <button id="buy-cart-btn" onclick="checkoutWholeCart()" class="w-full py-3.5 bg-gradient-to-r from-gold-500 via-gold-400 to-amber-400 hover:brightness-110 text-maroon-950 font-bold rounded-xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2 text-sm sm:text-base">
+        <span data-i18n="buyWholeCart">Try Mock Checkout</span>
+      </button>
+
+      <p class="text-[10px] sm:text-[11px] text-center text-stone-400 dark:text-stone-500 italic">
+        * Virtual practice transaction — no real money or orders placed.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== THANK YOU CELEBRATION MODAL ==================== -->
+  <div id="thank-you-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3.5 sm:p-4">
+    <div class="bg-white dark:bg-maroon-900 text-stone-800 dark:text-stone-100 rounded-3xl max-w-lg w-full p-5 sm:p-8 relative border-2 border-gold-400 shadow-2xl text-center space-y-4 sm:space-y-5 max-h-[92vh] overflow-y-auto">
+      <button onclick="closeThankYouModal()" class="absolute top-3.5 right-4 text-stone-400 hover:text-maroon-900 dark:hover:text-gold-300 font-bold text-2xl p-1 leading-none">&times;</button>
+      
+      <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-full bg-gold-400/20 border-2 border-gold-400/60 flex items-center justify-center diya-glow">
+        <svg width="36" height="36" viewBox="0 0 100 100" class="sm:w-10 sm:h-10">
+          <circle cx="50" cy="35" r="26" fill="#F5BE38" fill-opacity="0.35" />
+          <path d="M50 14 C44 26 40 37 43 45 C46 51 54 51 57 45 C60 37 56 26 50 14 Z" fill="#F59E0B" />
+          <path d="M18 50 C24 64 36 74 50 74 C64 74 76 64 82 50 Z" fill="#B85028" stroke="#F5BE38" stroke-width="3" />
+          <ellipse cx="50" cy="50" rx="28" ry="7" fill="#ECA928" />
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="font-title text-xl sm:text-3xl font-extrabold text-maroon-900 dark:text-gold-300" data-i18n="thankYouTitle">
+          Thank you for using our virtual store!
+        </h3>
+        <p class="text-xs sm:text-sm text-stone-600 dark:text-gold-100/90 mt-1.5 sm:mt-2" data-i18n="thankYouSub">
+          Your demonstration order was successfully placed. Here is your virtual stall receipt:
+        </p>
+      </div>
+
+      <div id="receipt-details" class="p-3.5 sm:p-4 bg-stone-50 dark:bg-maroon-950 rounded-2xl border border-stone-200 dark:border-gold-500/20 text-left text-xs space-y-2"></div>
+
+      <div class="p-3.5 sm:p-4 bg-gradient-to-r from-amber-50 to-gold-50 dark:from-maroon-850 dark:to-maroon-800 rounded-2xl border border-amber-300/80 dark:border-gold-500/40 text-xs text-amber-950 dark:text-stone-200 text-left">
+        <p class="font-bold flex items-center gap-1.5">
+          <span>📍</span>
+          <span>Come visit our real stall in person!</span>
+        </p>
+        <p class="mt-1">Hirachand Nemchand College, Solapur during Udyamdeep.</p>
+      </div>
+
+      <button onclick="closeThankYouModal()" class="w-full py-3 sm:py-3.5 bg-gradient-to-r from-gold-500 to-amber-400 hover:brightness-110 text-maroon-950 font-bold rounded-xl shadow-lg active:scale-95 transition text-sm sm:text-base">
+        Continue Exploring
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // 1. Dark Mode / Light Mode Management
+    const htmlEl = document.documentElement;
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const moonIcon = document.getElementById('theme-moon');
+    const sunIcon = document.getElementById('theme-sun');
+
+    function syncThemeIcons() {
+      if (htmlEl.classList.contains('dark')) {
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+      syncThemeIcons();
+    });
+    syncThemeIcons();
+
+    // 2. Interactive Diya Cursor (STRICTLY ON LAPTOP / DESKTOP, NOT ON MOBILE)
+    const cursor = document.getElementById('diya-cursor');
+    const flame = document.getElementById('cursor-flame');
+    const glow = document.getElementById('cursor-glow');
+
+    let mouseX = -100, mouseY = -100;
+    let lastSparkTime = 0;
+    let flameTimeout = null;
+
+    function isLaptopScreen() {
+      return window.innerWidth >= 768;
+    }
+
+    if (isLaptopScreen() && cursor) {
+      cursor.style.display = 'block';
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isLaptopScreen()) return;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+
+        const now = performance.now();
+        if (now - lastSparkTime > 35) {
+          createSparkle(mouseX, mouseY);
+          lastSparkTime = now;
+        }
+      });
+
+      window.addEventListener('mousedown', (e) => {
+        if (!isLaptopScreen()) return;
+        if (flameTimeout) clearTimeout(flameTimeout);
+        if (flame && glow) {
+          flame.classList.remove('opacity-0');
+          flame.classList.add('opacity-100', 'scale-100');
+          glow.classList.remove('opacity-0');
+          glow.classList.add('opacity-100');
+        }
+        createSparkBurst(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isLaptopScreen()) return;
+        flameTimeout = setTimeout(() => {
+          if (flame && glow) {
+            flame.classList.add('opacity-0');
+            flame.classList.remove('opacity-100', 'scale-100');
+            glow.classList.add('opacity-0');
+            glow.classList.remove('opacity-100');
+          }
+        }, 90);
+      });
+    }
+
+    function createSparkle(x, y) {
+      if (!isLaptopScreen()) return;
+      const spark = document.createElement('div');
+      spark.className = 'spark-dot';
+      const size = Math.random() * 4 + 2.5;
+      spark.style.width = size + 'px';
+      spark.style.height = size + 'px';
+      spark.style.left = (x - 2) + 'px';
+      spark.style.top = (y - 18) + 'px';
+      spark.style.setProperty('--tx', (Math.random() * 20 - 10) + 'px');
+      spark.style.setProperty('--ty', (Math.random() * 22 + 8) + 'px');
+      document.body.appendChild(spark);
+      setTimeout(() => spark.remove(), 750);
+    }
+
+    function createSparkBurst(x, y) {
+      if (!isLaptopScreen()) return;
+      for (let i = 0; i < 9; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'spark-dot';
+        const size = Math.random() * 6 + 3.5;
+        spark.style.width = size + 'px';
+        spark.style.height = size + 'px';
+        spark.style.left = (x - 2) + 'px';
+        spark.style.top = (y - 20) + 'px';
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * 32 + 14;
+        spark.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+        spark.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 750);
+      }
+    }
+
+    // 3. Audio & Music Management System
+    const bgMusicEl = document.getElementById('bg-music');
+    let isMasterMuted = false;
+    let masterVolume = 0.52;
+    let musicVolume = 0.52;
+    let sfxVolume = 0.85;
+    let isSfxMuted = false;
+
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function syncMasterVolume(val) {
+      masterVolume = parseFloat(val);
+      if (bgMusicEl) {
+        bgMusicEl.volume = isMasterMuted ? 0 : (musicVolume * masterVolume);
+      }
+      const topSlider = document.getElementById('top-volume-slider');
+      if (topSlider) topSlider.value = val;
+      updateSpeakerIcon();
+    }
+
+    function updateSpeakerIcon() {
+      const icon = document.getElementById('audio-bar-icon');
+      if (!icon) return;
+      if (isMasterMuted || masterVolume === 0) {
+        icon.textContent = '🔇';
+      } else if (masterVolume < 0.4) {
+        icon.textContent = '🔉';
+      } else {
+        icon.textContent = '🔊';
+      }
+    }
+
+    function toggleMasterMuteOrPlay(e) {
+      if (e) e.stopPropagation();
+      isMasterMuted = !isMasterMuted;
+      syncMasterVolume(masterVolume);
+    }
+
+    function toggleAudioDropdown(e) {
+      if (e) e.stopPropagation();
+      const dd = document.getElementById('audio-dropdown');
+      if (dd) dd.classList.toggle('hidden');
+    }
+
+    window.addEventListener('click', (e) => {
+      const dd = document.getElementById('audio-dropdown');
+      const btn = document.getElementById('audio-menu-btn');
+      if (dd && !dd.contains(e.target) && e.target !== btn) {
+        dd.classList.add('hidden');
+      }
+    });
+
+    function toggleMusicPlayback(e) {
+      if (e) e.stopPropagation();
+      if (!bgMusicEl) return;
+      const eqBars = document.getElementById('audio-eq-bars');
+      if (bgMusicEl.paused) {
+        bgMusicEl.play().then(() => {
+          if (eqBars) eqBars.classList.remove('hidden');
+        }).catch(() => {});
+      } else {
+        bgMusicEl.pause();
+        if (eqBars) eqBars.classList.add('hidden');
+      }
+    }
+
+    function updateMusicVolume(val) {
+      musicVolume = parseFloat(val);
+      const label = document.getElementById('music-vol-label');
+      if (label) label.textContent = Math.round(musicVolume * 100) + '%';
+      if (bgMusicEl) {
+        bgMusicEl.volume = isMasterMuted ? 0 : (musicVolume * masterVolume);
+      }
+    }
+
+    function toggleSfxMute(e) {
+      if (e) e.stopPropagation();
+      isSfxMuted = !isSfxMuted;
+      const btn = document.getElementById('sfx-mute-toggle');
+      if (btn) {
+        btn.textContent = isSfxMuted ? '🔕' : '🔔';
+      }
+    }
+
+    function updateSfxVolume(val) {
+      sfxVolume = parseFloat(val);
+      const label = document.getElementById('sfx-vol-label');
+      if (label) label.textContent = Math.round(sfxVolume * 100) + '%';
+    }
+
+    function playSoftPop() {
+      if (isSfxMuted || isMasterMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.08 * sfxVolume * masterVolume, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } catch (e) {}
+    }
+
+    function playSoftChime() {
+      if (isSfxMuted || isMasterMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(520, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.06 * sfxVolume * masterVolume, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    function playPleasantFireworkSound() {
+      if (isSfxMuted || isMasterMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const t = ctx.currentTime;
+        const whistleOsc = ctx.createOscillator();
+        const whistleGain = ctx.createGain();
+        whistleOsc.type = 'sine';
+        whistleOsc.frequency.setValueAtTime(380, t);
+        whistleOsc.frequency.exponentialRampToValueAtTime(850, t + 0.15);
+        whistleGain.gain.setValueAtTime(0.04 * sfxVolume * masterVolume, t);
+        whistleGain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        whistleOsc.connect(whistleGain);
+        whistleGain.connect(ctx.destination);
+        whistleOsc.start(t);
+        whistleOsc.stop(t + 0.15);
+
+        const burstOsc = ctx.createOscillator();
+        const burstGain = ctx.createGain();
+        burstOsc.type = 'triangle';
+        burstOsc.frequency.setValueAtTime(260 + Math.random() * 80, t + 0.14);
+        burstOsc.frequency.exponentialRampToValueAtTime(60, t + 0.32);
+        burstGain.gain.setValueAtTime(0.08 * sfxVolume * masterVolume, t + 0.14);
+        burstGain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+        burstOsc.connect(burstGain);
+        burstGain.connect(ctx.destination);
+        burstOsc.start(t + 0.14);
+        burstOsc.stop(t + 0.32);
+      } catch (e) {}
+    }
+
+    // 4. Toast Notification & Copying Number
+    function showToast(msg) {
+      const toast = document.getElementById('action-toast');
+      const text = document.getElementById('toast-text');
+      text.textContent = msg;
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-[-100px]', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2200);
+    }
+
+    function copyPhoneNumber(num) {
+      playSoftChime();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(num).then(() => {
+          showToast(`📋 Copied ${num} to clipboard!`);
+        }).catch(() => {
+          showToast(`Number: ${num}`);
+        });
+      } else {
+        showToast(`Number: ${num}`);
+      }
+    }
+
+    // 5. Split-Curtain Entrance
+    const introSlide = document.getElementById('intro-slide');
+    const enterBtn = document.getElementById('enter-btn');
+    enterBtn.addEventListener('click', () => {
+      playSoftChime();
+      introSlide.classList.add('curtain-open');
+      if (bgMusicEl && bgMusicEl.paused) {
+        bgMusicEl.play().then(() => {
+          const eqBars = document.getElementById('audio-eq-bars');
+          if (eqBars) eqBars.classList.remove('hidden');
+        }).catch(() => {});
+      }
+      setTimeout(() => {
+        introSlide.style.display = 'none';
+      }, 1150);
+    });
+
+    // 6. Fireworks Canvas System
+    const fwCanvas = document.getElementById('fireworks-canvas');
+    const fwCtx = fwCanvas.getContext('2d');
+    let fwParticles = [];
+    let fwRunning = false;
+
+    function resizeFwCanvas() {
+      fwCanvas.width = window.innerWidth;
+      fwCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeFwCanvas);
+    resizeFwCanvas();
+
+    function createFirework(x, y) {
+      const colors = ['#FFD700', '#FF8C00', '#FF4500', '#FF69B4', '#00E5FF', '#76FF03', '#FFFFFF'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const count = 42;
+      playPleasantFireworkSound();
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 / count) * i + (Math.random() * 0.15);
+        const speed = Math.random() * 5 + 2.2;
+        fwParticles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          decay: Math.random() * 0.016 + 0.012,
+          color: color,
+          size: Math.random() * 3 + 2
+        });
+      }
+    }
+
+    function launchCheckoutFireworks() {
+      fwParticles = [];
+      fwRunning = true;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      createFirework(w * 0.5, h * 0.32);
+      setTimeout(() => createFirework(w * 0.32, h * 0.25), 260);
+      setTimeout(() => createFirework(w * 0.68, h * 0.27), 520);
+      setTimeout(() => createFirework(w * 0.45, h * 0.4), 850);
+
+      renderFireworks();
+    }
+
+    function renderFireworks() {
+      if (!fwRunning) return;
+      fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+
+      for (let i = fwParticles.length - 1; i >= 0; i--) {
+        const p = fwParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.06;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          fwParticles.splice(i, 1);
+          continue;
+        }
+
+        fwCtx.save();
+        fwCtx.globalAlpha = p.alpha;
+        fwCtx.fillStyle = p.color;
+        fwCtx.beginPath();
+        fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        fwCtx.fill();
+        fwCtx.restore();
+      }
+
+      if (fwParticles.length > 0) {
+        requestAnimationFrame(renderFireworks);
+      } else {
+        fwRunning = false;
+        fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+      }
+    }
+
+    // 7. Trilingual Content
+    let currentLang = 'en';
+
+    const translations = {
+      en: {
+        welcomeTitle: "Welcome to the Bright Sparks",
+        enterBtn: "Enter Stall",
+        tagFood: "Food",
+        tagDecor: "Decor",
+        garappaTitle: "Garappa",
+        garappaSub: "Authentic Traditional Homemade Snack",
+        toranTitle: "Toran",
+        toranSub: "Festive Handmade Doorway Hanging & Gifting Decor",
+        clickDetails: "Recipe & story →",
+        clickDetailsDecor: "Craft details →",
+        addBtn: "+ Add",
+        comingSoon: "Coming Soon",
+        simNote: "Interactive Stall Experience • Virtual checkout demo for Udyamdeep",
+        aboutHeartwarming: "We are students here to celebrate Diwali by sharing handmade decorations and authentic homemade Garappa with all of you. Welcome to our virtual stall! Step in and experience what it's like to be at our store—we are truly happy to meet you!",
+        viewBio: "View Role",
+        backBtn: "Back to Stall",
+        ingredientsTitle: "Ingredients",
+        recipeStepsTitle: "Step-by-Step Recipe",
+        toranUsageTitle: "Festive Decoration & Gifting",
+        toranDesc: "You can use this beautiful toran to decorate your doorway for Diwali and welcome guests, or gift it to friends and family. It brings warmth, tradition, and festive elegance to every home.",
+        toranMakerTitle: "Crafted with Love:",
+        toranMakerInfo: "Handcrafted with love by Kinchal's mom and local artisans.",
+        customOrdersTitle: "Custom Orders & Tailoring:",
+        customOrdersInfo: "If you would like custom-made torans or tailoring services (like blouses and festival wear), contact directly:",
+        garappaMakerTitle: "Maker & Availability:",
+        garappaMakerInfo: "Prepared fresh using Kinchal's mom's authentic traditional recipe. This snack is made exclusively for our Bright Sparks stall and cannot be purchased anywhere outside!",
+        yourCart: "Stall Bag",
+        selectBag: "Select Packaging",
+        totalLabel: "Total:",
+        buyWholeCart: "Try Mock Checkout",
+        thankYouTitle: "Thank you for using our virtual store!",
+        thankYouSub: "Your demonstration order was successfully placed. Here is your virtual stall receipt:",
+        cartEmpty: "Your bag is currently empty.",
+        langNotice: "Language changed to English",
+        garappaIngredients: [
+          "Rice Flour - Main base",
+          "Chana Dal (Bengal Gram) - Soaked in water",
+          "Raw Peanuts - Coarsely crushed",
+          "Coriander Seeds - Lightly crushed",
+          "White Sesame Seeds",
+          "Ginger-Garlic Paste - To taste",
+          "Fresh Curry Leaves - Finely chopped",
+          "Fresh Coriander Leaves - Finely chopped",
+          "Hot Water - For kneading dough",
+          "Salt & Red Chilli Powder - To taste",
+          "Cooking Oil - For deep frying"
+        ],
+        garappaSteps: [
+          "1. Combine dry ingredients: In a mixing bowl, take rice flour. Add soaked chana dal, crushed raw peanuts, crushed coriander seeds, white sesame seeds, ginger-garlic paste, finely chopped curry leaves, fresh coriander, and salt.",
+          "2. Blend together: Mix all ingredients thoroughly with your hands so everything is evenly distributed.",
+          "3. Knead with hot water: Gradually add hot water and knead into a smooth, non-sticky dough.",
+          "4. Shape into puris: Make small balls of the dough. Lightly grease a plastic sheet on a puri-press machine, place a ball, and press gently into thin flat round discs.",
+          "5. Deep fry: Heat oil in a kadai over medium heat. Fry the puris until golden brown and crispy."
+        ]
+      },
+      hi: {
+        welcomeTitle: "ब्राइट स्पार्क्स में आपका स्वागत है",
+        enterBtn: "स्टॉल में प्रवेश करें",
+        tagFood: "खाद्य",
+        tagDecor: "सजावट",
+        garappaTitle: "गरप्पा",
+        garappaSub: "पारंपरिक प्रामाणिक घरेलू फराळ",
+        toranTitle: "तोरण",
+        toranSub: "दिवाली सजावट और उपहार के लिए हस्तनिर्मित तोरण",
+        clickDetails: "पूरी रेसिपी और जानकारी देखें →",
+        clickDetailsDecor: "कला और कारीगर की जानकारी →",
+        addBtn: "+ जोड़ें",
+        comingSoon: "जल्द आ रहा है",
+        simNote: "इंटरैक्टिव स्टॉल अनुभव • उद्यमदीप के लिए वर्चुअल डेमो",
+        aboutHeartwarming: "हम सभी के साथ हस्तनिर्मित सजावट और स्वादिष्ट घरेलू गरप्पा साझा करके दिवाली का आनंद मनाने आए हैं। हमारे वर्चुअल स्टॉल में आपका स्वागत है!",
+        viewBio: "भूमिका देखें",
+        backBtn: "स्टॉल पर वापस जाएं",
+        ingredientsTitle: "सामग्री (Ingredients)",
+        recipeStepsTitle: "बनाने की विधि (Recipe)",
+        toranUsageTitle: "सजावट और उपहार के लिए",
+        toranDesc: "इस सुंदर तोरण का उपयोग आप दिवाली पर अपने घर के मुख्य द्वार को सजाने और मेहमानों का स्वागत करने के लिए कर सकते हैं, या इसे दोस्तों और रिश्तेदारों को उपहार के रूप में दे सकते हैं।",
+        toranMakerTitle: "स्नेह से निर्मित:",
+        toranMakerInfo: "किंचल की माताजी और स्थानीय कारीगरों द्वारा हस्तनिर्मित।",
+        customOrdersTitle: "कस्टम ऑर्डर और सिलाई (Tailoring):",
+        customOrdersInfo: "यदि आप विशेष तोरण या ब्लाउज सिलाई जैसी टेलरिंग सेवाएं चाहते हैं, तो संपर्क करें:",
+        garappaMakerTitle: "बनाने वाले एवं उपलब्धता:",
+        garappaMakerInfo: "किंचल की माताजी की प्रामाणिक पारंपरिक रेसिपी से ताजा बनाया गया। यह केवल हमारे ब्राइट स्पार्क्स स्टॉल पर उपलब्ध है — बाहर कहीं नहीं मिलता!",
+        yourCart: "आपकी खरीदारी",
+        selectBag: "थैली चुनें",
+        totalLabel: "कुल:",
+        buyWholeCart: "अनुभव चेकआउट करें",
+        thankYouTitle: "हमारे वर्चुअल स्टोर का उपयोग करने के लिए धन्यवाद!",
+        thankYouSub: "आपका डेमो आर्डर सफलतापूर्वक पूरा हुआ। यहाँ आपकी वर्चुअल रसीद है:",
+        cartEmpty: "आपकी टोकरी खाली है।",
+        langNotice: "भाषा बदलकर हिन्दी की गई",
+        garappaIngredients: [
+          "चावल का आटा (तांदळाचे पीठ) - मुख्य आधार",
+          "चना दाल (हरभऱ्याची डाळ) - पानी में भीगी हुई",
+          "कच्ची मूंगफली (कच्चे शेंगदाणे) - दरदरी कुटी हुई",
+          "साबुत धनिया (धने) - हल्का कुटा हुआ",
+          "सफेद तिल (पांढरे तीळ)",
+          "अदरक-लहसुन पेस्ट - स्वादानुसार",
+          "कढ़ीपत्ता - बारीक कटा हुआ",
+          "हरा धनिया - बारीक कटा हुआ",
+          "गर्म पानी - आटा गूंथने के लिए",
+          "नमक और लाल मिर्च - स्वादानुसार",
+          "तेल - तलने के लिए"
+        ],
+        garappaSteps: [
+          "1. मिश्रण तैयार करें: बड़े बर्तन में चावल का आटा लें। इसमें भीगी चना दाल, कुटी मूंगफली, कुटा धनिया, तिल, अदरक-लहसुन पेस्ट, बारीक कढ़ीपत्ता, हरा धनिया और नमक मिलाएं।",
+          "2. एकजीव करें: सभी सामग्री को हाथ से अच्छी तरह मिला लें।",
+          "3. गर्म पानी से गूंथें: थोड़ा-थोड़ा गर्म पानी डालते हुए मुलायम आटा गूंथ लें।",
+          "4. पूरी बनाएं: आटे की छोटी गोलियां बनाएं। पूरी मशीन में प्लास्टिक पर हल्का तेल लगाकर छोटी पतली पूरी दबाकर तैयार करें।",
+          "5. खस्ता तलें: कढ़ाई में तेल गर्म करें और मध्यम आंच पर सुनहरी और कुरकुरी होने तक तलें."
+        ]
+      },
+      mr: {
+        welcomeTitle: "ब्राइट स्पार्क्स मध्ये आपले स्वागत आहे",
+        enterBtn: "स्टॉलमध्ये प्रवेश करा",
+        tagFood: "खाद्यपदार्थ",
+        tagDecor: "सजावट",
+        garappaTitle: "गरप्पा",
+        garappaSub: "पारंपरिक अस्सल घरगुती दिवाळी फराळ",
+        toranTitle: "तोरण",
+        toranSub: "दिवाळी सजावट आणि भेट देण्यासाठी सुंदर हस्तकला",
+        clickDetails: "सविस्तर कृती आणि माहिती पहा →",
+        clickDetailsDecor: "हस्तकला आणि कारागीर माहिती →",
+        addBtn: "+ जोडा",
+        comingSoon: "लवकरच येत आहे",
+        simNote: "इंटरॅक्टिव्ह स्टॉल अनुभव • उद्यमदीपसाठी व्हर्च्युअल डेमो",
+        aboutHeartwarming: "हस्तनिर्मित सजावट आणि अस्सल घरगुती गरप्पा आपल्या सर्वांसोबत सामायिक करून दिवाळीचा आनंद साजरा करण्यासाठी आम्ही येथे आलो आहोत. आपल्या व्हर्च्युअल स्टॉलवर आपले स्वागत आहे!",
+        viewBio: "माहिती पहा",
+        backBtn: "स्टॉलकडे परत जा",
+        ingredientsTitle: "साहित्य (Ingredients)",
+        recipeStepsTitle: "कृती (Step-by-Step Recipe)",
+        toranUsageTitle: "सजावट आणि भेटीसाठी सर्वोत्तम",
+        toranDesc: "दिवाळीत घराचे दार अधिक आकर्षक बनवण्यासाठी, पाहुण्यांचे स्वागत करण्यासाठी आणि प्रियजनांना दिवाळीची भेट (Gift) देण्यासाठी हे तोरण अतिशय उत्तम आहे.",
+        toranMakerTitle: "प्रेमाने बनवलेले:",
+        toranMakerInfo: "किंचल यांच्या आई व स्थानिक कारागिरांनी प्रेमाने हाताने तयार केलेले.",
+        customOrdersTitle: "कस्टम ऑर्डर्स आणि शिलाई (Tailoring):",
+        customOrdersInfo: "आपल्या आवडीनुसार खास तोरणे किंवा ब्लाउज शिलाई (Tailoring) हवी असल्यास थेट संपर्क साधा:",
+        garappaMakerTitle: "बनवणारे आणि उपलब्धता:",
+        garappaMakerInfo: "किंचल यांच्या आईच्या अस्सल पारंपरिक रेसिपीनुसार घरगुती बनवले आहे. हे केवळ आपल्या ब्राइट स्पार्क्स स्टॉलवर उपलब्ध आहे — बाहेर कुठेही मिळत नाही!",
+        yourCart: "तुमची पिशवी",
+        selectBag: "पिशवी निवडा",
+        totalLabel: "एकूण:",
+        buyWholeCart: "डेमो खरेदी करा",
+        thankYouTitle: "आमच्या व्हर्च्युअल स्टोअरला भेट दिल्याबद्दल धन्यवाद!",
+        thankYouSub: "तुमची प्रात्यक्षिक खरेदी यशस्वीरीत्या पूर्ण झाली आहे. ही तुमची व्हर्च्युअल पावती:",
+        cartEmpty: "तुमची पिशवी रिकामी आहे.",
+        langNotice: "भाषा मराठीत बदलली आहे",
+        garappaIngredients: [
+          "तांदळाचे पीठ (मुख्य पीठ)",
+          "पाण्यात भिजवून घेतलेली हरभऱ्याची डाळ",
+          "जाडसर कुटलेले कच्चे शेंगदाणे",
+          "किंचित फोडून घेतलेले धने (धने कूट)",
+          "पांढरे तीळ",
+          "चवीनुसार किंचित आलं-लसूण पेस्ट",
+          "बारीक चिरलेला कढीपत्ता",
+          "बारीक चिरलेली कोथिंबीर",
+          "पीठ मळण्यासाठी गरम पाणी",
+          "चवीनुसार मीठ व तिखट",
+          "तळण्यासाठी तेल"
+        ],
+        garappaSteps: [
+          "१. मिश्रण तयार करणे: परातीत तांदळाचे पीठ घ्या. त्यात भिजवलेली हरभऱ्याची डाळ, कुटलेले कच्चे शेंगदाणे, फोडलेले धने, पांढरे तीळ, आलं-लसूण पेस्ट, कढीपत्ता, कोथिंबीर आणि चवीनुसार मीठ घाला.",
+          "२. एकजीव करणे: सर्व जिन्नस पिठामध्ये हाताने व्यवस्थित एकत्र करून घ्या.",
+          "३. पीठ मळणे: आता गरम पाणी हळूहळू घालत पीठ छान मऊसर, न चिकटणारे मळून घ्या.",
+          "४. पुऱ्या तयार करणे: लहान गोळे तयार करून पुरी मशीनमध्ये प्लास्टिकवर तेल लावून पातळ पुऱ्या दाबून घ्या.",
+          "५. तळणे: कढईत तेल तापवून मध्यम आचेवर खमंग व कुरकुरीत होईपर्यंत तळून घ्या."
+        ]
+      }
+    };
+
+    function populateGarappaPage() {
+      const t = translations[currentLang];
+      const ingContainer = document.getElementById('garappa-ingredients-list');
+      const stepContainer = document.getElementById('garappa-steps-list');
+
+      ingContainer.innerHTML = t.garappaIngredients.map(item => `
+        <div class="flex items-center gap-2 p-2.5 rounded-xl bg-stone-50 dark:bg-maroon-950 border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold-500"></span>
+          <span>${item}</span>
+        </div>
+      `).join('');
+
+      stepContainer.innerHTML = t.garappaSteps.map(step => `
+        <p class="mb-2 last:mb-0">${step}</p>
+      `).join('');
+    }
+
+    function setLanguage(lang) {
+      playSoftChime();
+      currentLang = lang;
+      ['en', 'hi', 'mr'].forEach(l => {
+        const btn = document.getElementById('lang-' + l);
+        if (l === lang) {
+          btn.className = "px-1.5 sm:px-2 py-0.5 rounded-lg bg-gold-400 text-maroon-950 transition";
+        } else {
+          btn.className = "px-1.5 sm:px-2 py-0.5 rounded-lg text-stone-600 dark:text-gold-300 hover:text-black dark:hover:text-white transition";
+        }
+      });
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+
+      populateGarappaPage();
+      showToast(translations[lang].langNotice);
+    }
+
+    // 8. View Navigation
+    function showView(viewId) {
+      playSoftChime();
+      document.getElementById('view-stall').classList.add('hidden');
+      document.getElementById('view-garappa').classList.add('hidden');
+      document.getElementById('view-toran').classList.add('hidden');
+
+      if (viewId === 'garappa') {
+        document.getElementById('view-garappa').classList.remove('hidden');
+        populateGarappaPage();
+      } else if (viewId === 'toran') {
+        document.getElementById('view-toran').classList.remove('hidden');
+      } else {
+        document.getElementById('view-stall').classList.remove('hidden');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 9. Team Member Modal Details
+    const memberDetails = {
+      kinchal: {
+        name: "Kinchal",
+        division: "11th A",
+        role: "Project Lead & Coordinator",
+        note: "She created this website using AI, brought our entire group together, conceived the idea of presenting both handcrafted torans and homemade Garappa, and kept our whole stall organized!"
+      },
+      vaishnavi: {
+        name: "Vaishnavi",
+        division: "11th A",
+        role: "Financial Lead & Personal Accountant",
+        note: "Our group's personal accountant! She managed all the daily counting, financial recording, money journals, balance keeping, and ensured our calculations were always 100% on point."
+      },
+      darshana: {
+        name: "Darshana",
+        division: "11th B",
+        role: "Operations & Logistics Backbone",
+        note: "The true muscle and backbone of our team! She took charge of the manual heavy lifting—unboxing, moving inventory, packing bags, stall setup, and keeping everything running smoothly on ground."
+      },
+      kartiki: {
+        name: "Kartiki",
+        division: "11th A",
+        role: "Creative & Aesthetic Stylist",
+        note: "The artistic spirit behind Bright Sparks! She guided the creative presentation of our stall, decorative nuances, display styling, and made sure our items looked vibrant and festive."
+      },
+      ayushi: {
+        name: "Ayushi",
+        division: "11th A",
+        role: "Public Relations & Energy Booster",
+        note: "Our enthusiastic voice and active speaker! She made our stall popular across our classes, engaged with every visitor, cheered everyone up, and kept our team's energy and spirits soaring high."
+      }
+    };
+
+    function openMemberModal(id) {
+      playSoftChime();
+      const member = memberDetails[id];
+      if (!member) return;
+      const modal = document.getElementById('member-modal');
+      const content = document.getElementById('member-modal-content');
+      content.innerHTML = `
+        <div class="w-14 h-14 rounded-full bg-gold-400/20 border border-gold-400/50 flex items-center justify-center mb-3">
+          <span class="font-title text-xl font-bold text-gold-500">${member.name.charAt(0)}</span>
+        </div>
+        <h3 class="font-title text-2xl font-bold text-maroon-900 dark:text-gold-300">${member.name}</h3>
+        <p class="text-xs font-semibold text-clay-500 dark:text-gold-400 uppercase tracking-wider mt-0.5">${member.role}</p>
+        <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium mt-1 bg-stone-100 text-stone-700 dark:bg-maroon-800 dark:text-stone-300 border border-stone-200 dark:border-maroon-700">${member.division}</span>
+        <div class="mt-4 p-4 bg-stone-50 dark:bg-maroon-950/70 rounded-2xl border border-stone-200 dark:border-stone-800 text-xs sm:text-sm leading-relaxed text-stone-700 dark:text-stone-200 text-left">
+          ${member.note}
+        </div>
+      `;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeMemberModal() {
+      const modal = document.getElementById('member-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // 10. Cart, Wallet & Mock Checkout
+    let wallet = 1000;
+    const cart = {
+      garappa: { name: 'Garappa', price: 60, qty: 0 },
+      toran: { name: 'Toran', price: 120, qty: 0 }
+    };
+
+    function addToCart(itemId) {
+      cart[itemId].qty++;
+      playSoftPop();
+      const cartBtn = document.getElementById('cart-btn');
+      cartBtn.classList.remove('bump-anim');
+      void cartBtn.offsetWidth;
+      cartBtn.classList.add('bump-anim');
+      renderCart();
+    }
+
+    function changeQty(itemId, delta) {
+      if (cart[itemId].qty + delta >= 0) {
+        cart[itemId].qty += delta;
+        playSoftPop();
+        renderCart();
+      }
+    }
+
+    function toggleCart() {
+      playSoftChime();
+      const drawer = document.getElementById('cart-drawer');
+      drawer.classList.toggle('translate-x-full');
+      renderCart();
+    }
+    document.getElementById('cart-btn').addEventListener('click', toggleCart);
+
+    function renderCart() {
+      let totalCount = 0;
+      let itemsTotal = 0;
+      const container = document.getElementById('cart-items-container');
+      container.innerHTML = '';
+
+      Object.keys(cart).forEach(id => {
+        const item = cart[id];
+        if (item.qty > 0) {
+          totalCount += item.qty;
+          const cost = item.qty * item.price;
+          itemsTotal += cost;
+
+          const row = document.createElement('div');
+          row.className = "flex items-center justify-between p-3 bg-stone-50 dark:bg-maroon-900 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm";
+          row.innerHTML = `
+            <div>
+              <p class="font-bold text-sm text-maroon-900 dark:text-gold-200">${item.name}</p>
+              <p class="text-xs text-stone-500 dark:text-stone-400">₹${item.price} each</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="changeQty('${id}', -1)" class="w-6 h-6 rounded bg-stone-200 dark:bg-maroon-800 font-bold hover:bg-stone-300">-</button>
+              <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
+              <button onclick="changeQty('${id}', 1)" class="w-6 h-6 rounded bg-stone-200 dark:bg-maroon-800 font-bold hover:bg-stone-300">+</button>
+              <span class="text-sm font-bold text-maroon-900 dark:text-gold-300 ml-2">₹${cost}</span>
+            </div>
+          `;
+          container.appendChild(row);
+        }
+      });
+
+      document.getElementById('cart-counter').textContent = totalCount;
+
+      if (totalCount === 0) {
+        container.innerHTML = `<div class="text-center text-stone-400 dark:text-stone-500 py-12 text-sm">${translations[currentLang].cartEmpty}</div>`;
+      }
+
+      updateCartTotal();
+    }
+
+    function updateCartTotal() {
+      let itemsTotal = 0;
+      Object.keys(cart).forEach(id => {
+        itemsTotal += cart[id].qty * cart[id].price;
+      });
+
+      const bagOption = document.querySelector('input[name="packaging"]:checked');
+      const bagCost = itemsTotal > 0 && bagOption ? parseInt(bagOption.value) : 0;
+      const grandTotal = itemsTotal > 0 ? itemsTotal + bagCost : 0;
+
+      document.getElementById('cart-grand-total').textContent = `₹${grandTotal}`;
+      return grandTotal;
+    }
+
+    function checkoutWholeCart() {
+      const grandTotal = updateCartTotal();
+      if (grandTotal === 0) {
+        showToast("Your bag is empty! Add an item first.");
+        return;
+      }
+
+      if (wallet < grandTotal) {
+        showToast("Not enough balance in festive wallet!");
+        return;
+      }
+
+      wallet -= grandTotal;
+      document.getElementById('wallet-balance').textContent = `₹${wallet}`;
+
+      const receiptContainer = document.getElementById('receipt-details');
+      let receiptHtml = '';
+      Object.keys(cart).forEach(id => {
+        if (cart[id].qty > 0) {
+          receiptHtml += `<div class="flex justify-between"><span>${cart[id].name} &times; ${cart[id].qty}</span><span class="font-bold">₹${cart[id].qty * cart[id].price}</span></div>`;
+        }
+      });
+
+      const bagOption = document.querySelector('input[name="packaging"]:checked');
+      const bagName = bagOption.value === '5' ? 'Plastic Bag' : (bagOption.value === '10' ? 'Paper Bag' : 'Cotton Bag');
+      receiptHtml += `<div class="flex justify-between text-stone-500 dark:text-stone-400"><span>${bagName}</span><span>₹${bagOption.value}</span></div>`;
+      receiptHtml += `<div class="pt-2 border-t border-stone-300 dark:border-stone-700 flex justify-between font-bold text-sm text-maroon-900 dark:text-gold-300"><span>Simulated Total</span><span>₹${grandTotal}</span></div>`;
+      receiptHtml += `<div class="text-[10px] text-stone-500 dark:text-stone-400 pt-1">Remaining Demo Wallet: ₹${wallet} • Ref #BS-${Math.floor(1000 + Math.random() * 9000)}</div>`;
+
+      receiptContainer.innerHTML = receiptHtml;
+
+      Object.keys(cart).forEach(id => cart[id].qty = 0);
+      renderCart();
+      toggleCart();
+
+      launchCheckoutFireworks();
+
+      setTimeout(() => {
+        const thankYouModal = document.getElementById('thank-you-modal');
+        thankYouModal.classList.remove('hidden');
+        thankYouModal.classList.add('flex');
+      }, 500);
+    }
+
+    function closeThankYouModal() {
+      const thankYouModal = document.getElementById('thank-you-modal');
+      thankYouModal.classList.add('hidden');
+      thankYouModal.classList.remove('flex');
+    }
+
+    window.addEventListener('click', (e) => {
+      const memberModal = document.getElementById('member-modal');
+      const thankYouModal = document.getElementById('thank-you-modal');
+      if (e.target === memberModal) closeMemberModal();
+      if (e.target === thankYouModal) closeThankYouModal();
+    });
+
+    populateGarappaPage();
+  </script>
+</body>
+</html>
